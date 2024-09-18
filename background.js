@@ -27,10 +27,10 @@ chrome.runtime.onMessage.addListener(function(greeting){
     console.log('options it is true');
     getCurrentTab(section);
   }
-  else {
-    section = "content_specs.js";
-    console.log('specs it is true');
-    getCurrentTab(section);
+
+
+  else if {
+    console.log('aa')
   }
 
 });

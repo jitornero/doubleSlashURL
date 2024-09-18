@@ -22,4 +22,17 @@ document.getElementById('specs').addEventListener('click', function() {
   chrome.runtime.sendMessage(greeting);
 });
 
+
+document.getElementById('nbsp').addEventListener('click', function() {
+  console.log(' nbsp options Clicked!');
+
+  chrome.runtime.sendMessage(greeting);
+});
+
+document.getElementById('specs').addEventListener('click', function() {
+  console.log(' nbsp specs Clicked!');
+  greeting.options = false;
+  chrome.runtime.sendMessage(greeting);
+});
+
 console.log('hello chayyane')
