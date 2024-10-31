@@ -2,11 +2,11 @@
 
 const components02Selector = document.querySelector(".vehicleAttributes.section");
 
-if (components01Selector) {
+if (components02Selector) {
     const elementsWithNbsp = [];
 
     // Traverse all nodes within the container
-    components01Selector.querySelectorAll("*").forEach(element => {
+    components02Selector.querySelectorAll("*").forEach(element => {
         const hasUnicodeNbsp = element.textContent.includes('\u00A0');
         const hasPlainTextNbsp = element.innerHTML.includes('&nbsp;');
 
