@@ -1,25 +1,32 @@
+// Seleccionar el elemento padre utilizando el selector especificado
+const parentElement = document.querySelector(".threeColumnFeature.section");
 
+// Crear un array para almacenar los elementos que cumplen con la validación
+const nodesArray = [];
 
-const components02Selector = document.querySelector(".vehicleAttributes.section");
-
-if (components01Selector) {
-    const elementsWithNbsp = [];
-
-    // Traverse all nodes within the container
-    components01Selector.querySelectorAll("*").forEach(element => {
-        const hasUnicodeNbsp = element.textContent.includes('\u00A0');
-        const hasPlainTextNbsp = element.innerHTML.includes('&nbsp;');
-
-        // If the element directly contains &nbsp; as either unicode or plain text
-        // Ensure that it is not a parent of another element containing &nbsp;
-        if ((hasUnicodeNbsp || hasPlainTextNbsp) && element.childElementCount === 0) {
-            elementsWithNbsp.push(element);
-            // Highlight the element on the page
-            element.style.border = "3px solid green";
-        }
+// Función para verificar si hay &nbsp; directamente en el texto de un elemento
+function hasNbspInSameLevel(element) {
+    // Obtener todos los nodos de texto del elemento
+    const childNodes = Array.from(element.childNodes);
+    
+    // Validar si alguno de los nodos de texto contiene &nbsp; sin considerar nodos hijos
+    return childNodes.some(node => {
+        // Verificar si el nodo es de tipo texto y contiene &nbsp;
+        return node.nodeType === Node.TEXT_NODE && node.textContent.includes('\u00A0');
     });
-
-    console.log("Elements with &nbsp; in twoColumnBillboardSection found:", elementsWithNbsp);
-} else {
-    console.warn("No element found with the specified selector.");
 }
+
+// Encontrar todos los elementos dentro del elemento padre
+const allChildElements = Array.from(parentElement.querySelectorAll('*'));
+
+// Iterar sobre todos los elementos encontrados
+allChildElements.forEach(el => {
+    // Verificar si el elemento cumple con la validación
+    if (hasNbspInSameLevel(el)) {
+        // Si es true, agregar el elemento al array
+        nodesArray.push(el);
+    }
+});
+
+// Logear el array de nodos que cumplen la validación
+console.log(nodesArray);
