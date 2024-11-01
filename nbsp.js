@@ -1,6 +1,13 @@
 
 //const elements = $x("//section[contains(@class, 'fgx-brand-accordion-item')]");
 //Options o Specs según boton
+const models = {
+
+  selector4:"document.querySelectorAll('section[class*='fgx-brand-accordion-item']')[0]",
+  selector5:"section[class*='fgx-brand-accordion-item']"
+}
+
+
 const elements = document.querySelectorAll("section[class*='fgx-brand-accordion-item']");
 
 
