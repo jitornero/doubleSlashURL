@@ -13,10 +13,20 @@ allAnchorElements.forEach(el => {
         // Agregar un objeto con el elemento y el href al array
         hrefsArray.push({
             element: el,
-            href: el.getAttribute('href')
+            href: el.getAttribute('href'),
+            class: el.className
         });
     }
 });
 
 // Imprimir el array completo con los elementos y sus hrefs
 console.log(hrefsArray);
+
+
+function checkDoubleSlash(hrefsArray) {
+    hrefsArray.forEach((element, index)=>{
+    //console.log(element, index)
+    //console.log(element.Map);
+    })
+}
+checkDoubleSlash(hrefsArray)

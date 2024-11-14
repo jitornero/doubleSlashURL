@@ -66,11 +66,9 @@ function chooseAccordion (section){
         </tbody>
       </table>
     </body>
-    </html>`;
-    
+    </html>`;   
     newWindow.document.write(htmlContent);
     newWindow.document.close();
-    
 
 }
 
