@@ -152,10 +152,13 @@ function validationRelative (data, validationElement, divId) {
     }
     if (data.includes("?")) {
         const trimmedData = data.split("?")[0];
-        if (trimmedData.endsWith("/")) {
+        if (trimmedData.endsWith("/") == true) {
             console.log("No puedes autorear con barra");
             addValidationMessage(validationElement, divId, "The relative URL should not end with '/'");
             return;
+        }
+        else {
+            removeValidationMessage(divId)
         }
         e.target.value = trimmedData;
         console.log("Valor actualizado:", trimmedData);
