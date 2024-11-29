@@ -29,8 +29,13 @@ function verificarInputCta() {
 
 
 //probar en consola
-document.addEventListener("click", (event) => {
-    if (event.target.matches(".coral3-Textfield.coral-InputGroup-input")) { // Cambia ".miClase" por el selector deseado
+
+
+document.addEventListener("click", handleEvent)
+document.addEventListener("focusin", handleEvent);
+
+function handleEvent(event) {
+    if (event.target.matches(".coral3-Textfield.coral-InputGroup-input")) {
 
         let sharedTarget = event.target;
         //console.log('seleccion compartida:');
@@ -39,17 +44,59 @@ document.addEventListener("click", (event) => {
         //console.log(validationElement);
         let specifTarget = "";
         if (validationElement.innerText === "CTA Link") {
-            console.log('seleccion CTA Link desde TM')
+            //console.log('seleccion CTA Link desde TM')
 
             let target = sharedTarget;
-            target.addEventListener('input', dataValidation);
+            const alertMssg = document.createElement('div');
+            const alertContent = "the relative url should not end with '/' ";
 
-            function dataValidation(e){
-                console.log('el valor del input esta siendo cambiado')
-            }
+            alertMssg.setAttribute('id', 'div_qa_validation');
+            alertMssg.textContent = alertContent;
+            alertMssg.style.color = 'red';
+
+            //target.addEventListener('input', dataValidation);
+            //target.addEventListener('change', dataValidation);
+            target.addEventListener('focusout', dataValidation);
+
+
+
+
+            function dataValidation(e) {
+                let data = e.target.value;
+                console.log(data);
+
+                // Si la URL es absoluta (comienza con "https"), no hacemos nada
+                if (data.startsWith("https")) {
+                    return;
+                }
+
+                // Si la URL es relativa (comienza con "/")
+                if (data.startsWith("/")) {
+                    if (data.endsWith("/")) {
+                        console.log("No puedes autorear con barra");
+                        validationElement.appendChild(alertMssg);
+
+                        return;
+                    }
+                    if (data.includes("?")) {
+                        let trimmedData = data.split("?")[0];
+
+                        if (trimmedData.endsWith("/")) {
+                            console.log("No puedes autorear con barra");
+                            validationElement.appendChild(alertMssg);
+
+                            return;
+                        }
+                        e.target.value = trimmedData;
+                        console.log("Valor actualizado:", trimmedData);
+                    }
+                }
+            };
+
         }
-    }
-});
+    };
+}
+
 
 
 
