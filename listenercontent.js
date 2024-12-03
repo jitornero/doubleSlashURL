@@ -1,70 +1,62 @@
-
-
-
 document.addEventListener("focusin", handleEvent);
 
 function handleEvent(event) {
     if (event.target.matches(".coral3-Textfield.coral-InputGroup-input")) {
-        const sharedTarget = event.target;
-        const ancestor = sharedTarget.closest('.coral-Form-fieldwrapper');
-        const validationElement = ancestor.querySelector('label');
+        const target = event.target;
+        const ancestor = target.closest('.coral-Form-fieldwrapper');
+        const label = ancestor.querySelector('label').innerText;
 
-        if (validationElement.innerText === "CTA Link") {//
+        if (label === "CTA Link") {
+            handleCTALink(target, ancestor);
+        }
+    }
+}
 
+function handleCTALink(target, container) {
+    target.addEventListener('focusout', (e) => {
+        // Agregar retraso antes de realizar la validación
+        setTimeout(() => {
+            const data = e.target.value;
+            const divId = "div_qa_validation";
+            const ariaExpanded = target.getAttribute('aria-expanded');
 
-            sharedTarget.addEventListener('focusout', dataValidation);
-
-            function dataValidation(e) {
-                const data = e.target.value;
-                const divId = "div_qa_validation";
-
+            // Si el dropdown está cerrado (aria-expanded = false)
+            if (ariaExpanded === 'false') {
                 if (data.startsWith("https")) {
                     removeValidationMessage(divId);
                     return;
                 }
 
                 if (data.startsWith("/")) {
-
-                    validationRelative(data, validationElement, divId)
+                    validationRelative(data, container, divId);
                 } else {
                     removeValidationMessage(divId);
                 }
             }
-        }
-    }
+        }, 1500); // Espera de 100ms (puedes ajustar este valor según sea necesario)
+    });
 }
 
-
-function validationRelative (data, validationElement, divId) {
-
-    if (data.endsWith("/") == true) {
-        console.log("No puedes autorear con barra");
+function validationRelative(data, validationElement, divId) {
+    if (data.endsWith("/")) {
         addValidationMessage(validationElement, divId, "The relative URL should not end with '/'");
         return;
     }
+
     if (data.includes("?")) {
         const trimmedData = data.split("?")[0];
-        if (trimmedData.endsWith("/") == true) {
-            console.log("No puedes autorear con barra");
+        if (trimmedData.endsWith("/")) {
             addValidationMessage(validationElement, divId, "The relative URL should not end with '/'");
-            return;
+        } else {
+            removeValidationMessage(divId);
         }
-        else {
-            removeValidationMessage(divId)
-        }
-        e.target.value = trimmedData;
-        console.log("Valor actualizado:", trimmedData);
+    } else {
+        removeValidationMessage(divId);
     }
-    else if (data.endsWith("/") == false) {
-        removeValidationMessage(divId)
-
-    }
-
 }
 
 function addValidationMessage(container, divId, message) {
     let existingDiv = document.getElementById(divId);
-
     if (!existingDiv) {
         const alertMssg = document.createElement('div');
         alertMssg.setAttribute('id', divId);
@@ -72,9 +64,7 @@ function addValidationMessage(container, divId, message) {
         alertMssg.style.color = 'red';
         container.appendChild(alertMssg);
     }
-
 }
-
 
 function removeValidationMessage(divId) {
     const existingDiv = document.getElementById(divId);
@@ -82,4 +72,3 @@ function removeValidationMessage(divId) {
         existingDiv.remove();
     }
 }
-
