@@ -1,40 +1,41 @@
-document.addEventListener("focusin", handleEvent);
-
-function handleEvent(event) {
+document.addEventListener("focusout", (event) => {
+    // Verificamos que el evento sea en un input dentro de un formulario
     if (event.target.matches(".coral3-Textfield.coral-InputGroup-input")) {
         const target = event.target;
         const ancestor = target.closest('.coral-Form-fieldwrapper');
         const label = ancestor.querySelector('label').innerText;
 
-        if (label === "CTA Link") {
-            handleCTALink(target, ancestor);
+        // Lista de etiquetas válidas para los que necesitamos validación
+        const validLabels = ["CTA Link", "CTA URL", "CTA Image", /* añade más */];
+
+        // Si la etiqueta está en la lista, se realiza la validación
+        if (validLabels.includes(label)) {
+            handleFocusOut(target, ancestor, label);
         }
     }
-}
+});
 
-function handleCTALink(target, container) {
-    target.addEventListener('focusout', (e) => {
-        // Agregar retraso antes de realizar la validación
-        setTimeout(() => {
-            const data = e.target.value;
-            const divId = "div_qa_validation";
-            const ariaExpanded = target.getAttribute('aria-expanded');
+function handleFocusOut(target, container, label) {
+    // Agregar retraso antes de realizar la validación
+    setTimeout(() => {
+        const data = target.value;
+        const divId = "div_qa_validation";
+        const ariaExpanded = target.getAttribute("aria-expanded");
 
-            // Si el dropdown está cerrado (aria-expanded = false)
-            if (ariaExpanded === 'false') {
-                if (data.startsWith("https")) {
-                    removeValidationMessage(divId);
-                    return;
-                }
-
-                if (data.startsWith("/")) {
-                    validationRelative(data, container, divId);
-                } else {
-                    removeValidationMessage(divId);
-                }
+        // Si el dropdown está cerrado (aria-expanded = false)
+        if (ariaExpanded === "false") {
+            if (data.startsWith("https")) {
+                removeValidationMessage(divId);
+                return;
             }
-        }, 1500); // Espera de 100ms (puedes ajustar este valor según sea necesario)
-    });
+
+            if (data.startsWith("/")) {
+                validationRelative(data, container, divId);
+            } else {
+                removeValidationMessage(divId);
+            }
+        }
+    }, 100); // Ajusta este retraso si es necesario
 }
 
 function validationRelative(data, validationElement, divId) {
