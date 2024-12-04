@@ -44,17 +44,15 @@ function handleValidationWithAria(target, container, label) {
 function executeValidation(target, container, label, divId) {
     const data = target.value;
 
-    // Solo validamos en los elementos relevantes
-    if (label === "CTA Link" || label === "CTA URL" /* Agrega más validaciones de etiquetas aquí */) {
-        if (data.startsWith("https")) {
-            removeValidationMessage(divId);
-        } else if (data.startsWith("/")) {
-            validationRelative(data, container, divId);
-        } else {
-            removeValidationMessage(divId);
-        }
+    if (data.startsWith("https")) {
+        removeValidationMessage(divId);
+    } else if (data.startsWith("/")) {
+        validationRelative(data, container, divId);
+    } else {
+        removeValidationMessage(divId);
     }
 }
+
 
 function validationRelative(data, validationElement, divId) {
     if (data.endsWith("/")) {
