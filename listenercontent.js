@@ -6,36 +6,54 @@ document.addEventListener("focusout", (event) => {
         const label = ancestor.querySelector('label').innerText;
 
         // Lista de etiquetas válidas para los que necesitamos validación
-        const validLabels = ["CTA Link", "CTA URL", "CTA Image", /* añade más */];
+        const validLabels = ["CTA Link", "CTA URL", "CTA Image", "Back Button Link", "First Shopping Tool Path","Second Shopping Tool Path","Link URL","Vehicle Page","KBA URL","Compare Models CTA URL", "Model Item CTA URL", "Previous Link","Next Link","Order Now Button Link"];
 
         // Si la etiqueta está en la lista, se realiza la validación
         if (validLabels.includes(label)) {
-            handleFocusOut(target, ancestor, label);
+            handleValidationWithAria(target, ancestor, label);
         }
     }
 });
 
-function handleFocusOut(target, container, label) {
-    // Agregar retraso antes de realizar la validación
-    setTimeout(() => {
-        const data = target.value;
-        const divId = "div_qa_validation";
-        const ariaExpanded = target.getAttribute("aria-expanded");
+function handleValidationWithAria(target, container, label) {
+    const divId = "div_qa_validation";
+    const maxWaitTime = 2000;  // 2 segundos máximo
+    const startTime = Date.now();  // Guardamos el momento de inicio
 
-        // Si el dropdown está cerrado (aria-expanded = false)
-        if (ariaExpanded === "false") {
-            if (data.startsWith("https")) {
-                removeValidationMessage(divId);
-                return;
-            }
-
-            if (data.startsWith("/")) {
-                validationRelative(data, container, divId);
+    function checkAriaExpanded() {
+        const ariaExpanded = target.getAttribute('aria-expanded');
+        
+        if (ariaExpanded === 'false') {
+            // Si el dropdown está cerrado (aria-expanded = false), ejecutamos la validación
+            executeValidation(target, container, label, divId);
+        } else {
+            // Si no, verificamos nuevamente hasta que pasen 2 segundos o se cierre el dropdown
+            if (Date.now() - startTime < maxWaitTime) {
+                setTimeout(checkAriaExpanded, 50);  // Esperamos 50 ms y verificamos nuevamente
             } else {
-                removeValidationMessage(divId);
+                // Si el tiempo se agotó, ejecutamos la validación (o algo adicional si es necesario)
+                executeValidation(target, container, label, divId);
             }
         }
-    }, 100); // Ajusta este retraso si es necesario
+    }
+
+    // Iniciamos la verificación
+    checkAriaExpanded();
+}
+
+function executeValidation(target, container, label, divId) {
+    const data = target.value;
+
+    // Solo validamos en los elementos relevantes
+    if (label === "CTA Link" || label === "CTA URL" /* Agrega más validaciones de etiquetas aquí */) {
+        if (data.startsWith("https")) {
+            removeValidationMessage(divId);
+        } else if (data.startsWith("/")) {
+            validationRelative(data, container, divId);
+        } else {
+            removeValidationMessage(divId);
+        }
+    }
 }
 
 function validationRelative(data, validationElement, divId) {
