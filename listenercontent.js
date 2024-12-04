@@ -16,7 +16,7 @@ document.addEventListener("focusout", (event) => {
 });
 
 function handleValidationWithAria(target, container, label) {
-    const divId = "div_qa_validation";
+    const divId = "QA_" + target.id;
     const maxWaitTime = 2000;  // 2 segundos máximo
     const startTime = Date.now();  // Guardamos el momento de inicio
 
@@ -78,7 +78,7 @@ function addValidationMessage(container, divId, message) {
     let existingDiv = document.getElementById(divId);
     if (!existingDiv) {
         const alertMssg = document.createElement('div');
-        alertMssg.setAttribute('id', divId);
+        alertMssg.setAttribute('id', divId); 
         alertMssg.textContent = message;
         alertMssg.style.color = 'red';
         container.appendChild(alertMssg);
@@ -88,6 +88,6 @@ function addValidationMessage(container, divId, message) {
 function removeValidationMessage(divId) {
     const existingDiv = document.getElementById(divId);
     if (existingDiv) {
-        existingDiv.remove();
+        existingDiv.remove(); 
     }
 }
